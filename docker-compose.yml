@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    networks: 
+      - node-network
+    entrypoint: dockerize -wait tcp://db:5432 -timeout 150s docker-entrypoint.sh
+    command: npm run dev
+    ports:
+      - 3333:3333
+    links:
+      - db
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    networks: 
+      - node-network
+    ports:
+      - 3000:3000
+    links:
+      - backend
+    depends_on:
+      - backend
+
+  teste-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "nevesxbox@live.com"
+      PGADMIN_DEFAULT_PASSWORD: "ignite"
+    ports:
+      - "6868:80"
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - TZ=America/Sao_Paulo
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=ignite
+      - POSTGRES_DB=rentx
+    networks: 
+      - node-network
+    volumes:
+      - pgdata:/data/postgres
+
+volumes:
+  pgdata:
+    driver: local
+
+networks: 
+  node-network: 
