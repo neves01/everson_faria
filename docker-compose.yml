@@ -30,7 +30,7 @@ services:
     depends_on:
       - backend
 
-  teste-pgadmin-compose:
+  pgadmin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "nevesxbox@live.com"
@@ -48,6 +48,7 @@ services:
       - 5432:5432
     environment:
       - TZ=America/Sao_Paulo
+      - PGTZ=America/Sao_Paulo
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=ignite
       - POSTGRES_DB=rentx

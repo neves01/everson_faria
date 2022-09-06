@@ -6,6 +6,8 @@ COPY . .
 
 RUN npm install
 
+ENV TZ="America/Sao_Paulo"
+
 EXPOSE 3000
 
 CMD ["npm","run","dev"] 

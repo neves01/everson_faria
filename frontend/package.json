@@ -13,7 +13,7 @@
     "bootstrap": "^5.1.3",
     "brazilian-values": "^0.10.1",
     "date-fns": "^2.29.2",
-    "dayjs": "^1.11.3",
+    "dayjs": "^1.11.5",
     "react": "^18.0.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.0.0",
