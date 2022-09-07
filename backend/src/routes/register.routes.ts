@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { CreateRegisterController } from 'useCases/Register/CreateRegisterController';
+import { DeleteRegisterController } from 'useCases/Register/DeleteRegisterController';
 import { FindRegisterByIdController } from 'useCases/Register/FindRegisterByIdController';
 import { ListFilteredByDateController } from 'useCases/Register/ListFilteredByDateController';
 import { ListFilteredByDescriptionController } from 'useCases/Register/ListFilteredByDescriptionController';
@@ -14,6 +15,7 @@ const listFilteredByDescriptionController = new ListFilteredByDescriptionControl
 const updateRegisterController = new UpdateRegisterController();
 const findRegisterByIdController = new FindRegisterByIdController();
 const listFilteredByDateController = new ListFilteredByDateController();
+const deleteRegisterController = new DeleteRegisterController();
 
 registerRoutes.post(
     "/register",
@@ -24,6 +26,11 @@ registerRoutes.get(
     "/register",
     listRegisterController.handle
 )
+
+registerRoutes.get(
+    "/register/delete/:id",
+    deleteRegisterController.handle
+);
 
 registerRoutes.get(
     "/register/id/:id",
