@@ -22,6 +22,17 @@ class ServiceRepository implements IServiceRepository {
         return services;
     }
 
+    async listByCustomerNameAndDate(name: string, dataInicio: string, dataFim: string): Promise<Service[]> {
+        const services = await this.repository
+            .createQueryBuilder("service")
+            .leftJoinAndSelect("service.customer", "c")
+            .where("c.name ILIKE :name", { name: `%${name}%` })
+            .andWhere("service.date BETWEEN :dataInicio AND :dataFim", { dataInicio: `${dataInicio}`, dataFim: `${dataFim}` })
+            .getMany();
+
+        return services;
+    }
+
     async updateService(id: string, data: IServiceDTO): Promise<void> {
         let patient = await this.repository.findOne({ id });
 

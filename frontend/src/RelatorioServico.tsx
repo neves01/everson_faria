@@ -8,6 +8,7 @@ import Badge from 'react-bootstrap/Badge';
 import styles from './Listagem.module.css';
 
 import dayjs from 'dayjs';
+import { format } from 'date-fns';
 import { formatToBRL } from 'brazilian-values';
 import { Container, Navbar } from 'react-bootstrap';
 
@@ -30,18 +31,36 @@ export const RelatorioServico = () => {
     const [services, setServices] = useState([] as IService[]);
     const [total, setTotal] = useState(0);
 
+    const today = new Date();
+    const end = new Date();
+    today.setDate(today.getDate() - 7);
+    end.setDate(end.getDate() + 1);
+    const formattedDateToday = format(today, 'yyyy-MM-dd');
+    const formattedDateEnd = format(end, 'yyyy-MM-dd');
+
+    const [dataInicio, setDataInicio] = useState(formattedDateToday);
+    const [dataFim, setDataFim] = useState(formattedDateEnd);
+
     useEffect(() => {
-        fetch(`http://localhost:3333/service/${searchCustomerName}`)
+        fetch(`http://localhost:3333/service/${dataInicio}/${dataFim}/?name=${searchCustomerName}`)
             .then(response => response.json())
             .then(data => {
                 setServices(data);
                 setTotal(data.reduce((sum: number, v: IService) => sum + Number(v.value), 0));
             })
             .catch((error) => console.log(error));
-    }, [searchCustomerName]);
+    }, [searchCustomerName, dataInicio, dataFim]);
 
     const handleOnChangeSearchCustomerName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchCustomerName(e.target.value);
+    }
+
+    const handleOnChangeDataInicio = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDataInicio(e.target.value);
+    }
+
+    const handleOnChangeDataFim = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDataFim(e.target.value);
     }
 
     const objStrToStr = (s: string, v: string[]) => {
@@ -56,13 +75,29 @@ export const RelatorioServico = () => {
     return (
         <div className={styles.table}>
             <FormGroup>
-                <h4>Busca por nome Cliente</h4>
+                <h4>Busca por nome Cliente junto com data Serviço</h4>
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Filtragem pelo nome Cliente"
                     className="mb-3"
                 >
                     <Form.Control type="text" value={searchCustomerName} onChange={handleOnChangeSearchCustomerName} />
+                </FloatingLabel>
+
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="De"
+                    className="mb-3"
+                >
+                    <Form.Control type="date" value={dataInicio} onChange={handleOnChangeDataInicio} />
+                </FloatingLabel>
+
+                <FloatingLabel
+                    controlId="floatingInput"
+                    label="Até"
+                    className="mb-3"
+                >
+                    <Form.Control type="date" value={dataFim} onChange={handleOnChangeDataFim} />
                 </FloatingLabel>
 
             </FormGroup>
